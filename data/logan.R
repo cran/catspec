@@ -1,0 +1,7 @@
+logan <- read.table("logan.dat")
+names(logan) <- c("occ", "focc", "educ", "black")
+logan$occ <- factor(logan$occ,label=c("farm", "operatives", "craftsmen", "sales", "professional"))
+logan$focc <- factor(logan$focc,label=c("farm", "operatives", "craftsmen", "sales", "professional"))
+logan$black <- factor(logan$black,label=c("non-black", "black"))
+logan<-data.frame(logan)
+attach(logan)
