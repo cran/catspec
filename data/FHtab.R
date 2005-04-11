@@ -17,5 +17,4 @@ FHtab<-t(FHtab)
 dimnames(FHtab) <- list(OccFather=c("Upper nonmanual","Lower nonmanual","Upper manual","Lower manual","Farm"),
                         OccSon   =c("Upper nonmanual","Lower nonmanual","Upper manual","Lower manual","Farm"))
 class(FHtab) <- "table"
-FHtab<-as.data.frame(FHtab)
 FHtab

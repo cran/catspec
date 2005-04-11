@@ -13,8 +13,7 @@
 \title{sqtab: models for square tables}
 
 \description{
-  These functions are used to estimate loglinear models for square tables such as quasi-independence,
-  quasi-symmetry.
+These functions are used to estimate loglinear models for square tables such as quasi-independence, quasi-symmetry.
 }
 
 \usage{
@@ -32,42 +31,62 @@ check.square(rowvar, colvar, equal = TRUE)
 \arguments{
   \item{rowvar}{Factor representing the row variable}
   \item{colvar}{Factor representing the column variable}
-  \item{print.labels}{If FALSE (default) then numeric values rather than factor values are printed for compact results}
-  \item{equal}{(\code{mob.rc1}) If TRUE, a homogeneous row and column effects model 1 with equal scale values for the row and column variables is estimated. Otherwise, a (regular) RC1 model is estimated with different scale values for the row and column variables
+  \item{print.labels}{If FALSE (default) then numeric values rather
+  than factor values are printed for compact results}
+  \item{equal}{(\code{mob.rc1}) If TRUE, a homogeneous row and column
+  effects model 1 with equal scale values for the row and column
+  variables is estimated. Otherwise, a (regular) RC1 model is
+  estimated with different scale values for the row and column
+  variables
   \cr
-  (\code{check.square}) If TRUE, the row and column variables must have the same number of categories}
-  \item{constrained}{(\code{mob.qi})If TRUE, a quasi-independence model-constrained is estimated with a single parameter for the diagonal cells}
-  \item{object}{(\code{fitmacro}) An object of class \code{glm} for \code{family=poisson} and \code{link=log}}
+  (\code{check.square}) If TRUE, the row and column variables must
+  have the same number of categories}
+  \item{constrained}{(\code{mob.qi})If TRUE, a quasi-independence
+  model-constrained is estimated with a single parameter for the
+  diagonal cells}
+  \item{object}{(\code{fitmacro}) An object of class \code{glm} for
+  \code{family=poisson} and \code{link=log}}
 }
 \details{
-  These functions are used to estimate loglinear models for square tables:
+  These functions are used to estimate loglinear models for square
+  tables:
   \item{mob.qi}{Quasi-independence}
   \item{mob.eqmain}{Equal main effects (Hope's halfway model)}
   \item{mob.symint}{Symmetric interaction}
   \item{mob.cp}{Crossings-parameter model}
   \item{mob.unif}{Uniform association}
   \item{mob.rc1}{Row and columns model 1}
-  \item{fitmacro}{Calculates \code{BIC} and \code{AIC} relative to a saturated loglinear model}
-  \item{check.square}{Internal function to check if row and column variables are both factors with the same number of levels}
+  \item{fitmacro}{Calculates \code{BIC} and \code{AIC} relative to a
+  saturated loglinear model}
+  \item{check.square}{Internal function to check if row and column
+  variables are both factors with the same number of levels}
 
 }
 \value{
-  \item{mob.qi}{A factor that will produce coefficients for the diagonal cells of a table, using off-
+  \item{mob.qi}{A factor that will produce coefficients for the
+  diagonal cells of a table, using off-
   diagonal cells as base category}
-  \item{mob.eqmain}{A design matrix with equality contraints on the main effects}
-  \item{mob.symint}{A design matrix for an interaction with equality contraints on coefficients on
+  \item{mob.eqmain}{A design matrix with equality contraints on the
+  main effects}
+  \item{mob.symint}{A design matrix for an interaction with equality
+  contraints on coefficients on
   opposite sides of the diagonal}
   \item{mob.cp}{A set of vectors for a crossings-parameter model}
   \item{mob.unif}{A vector for a uniform association model}
   \item{mob.rc1}{A set of vectors for a row and columns model 1}
-  \item{fitmacro}{Prints deviance, df, BIC, AIC, number of parameters and N}
-  \item{check.square}{Stops function if either the row or column variable is not a factor or if the
+  \item{fitmacro}{Prints deviance, df, BIC, AIC, number of parameters
+  and N}
+  \item{check.square}{Stops function if either the row or column
+  variable is not a factor or if the
   number of levels is unequal}
 }
 \references{
-  Hout, Michael. (1983). \emph{Mobility Tables}. Sage Publication 07-031.
+  Hout, Michael. (1983). \emph{Mobility Tables}. Sage Publication
+  07-031.
 
-  Goodman, Leo A. (1984). \emph{The analysis of cross-classified data having ordered categories.} Cambridge, Mass.: Harvard University Press.
+  Goodman, Leo A. (1984). \emph{The analysis of cross-classified data
+  having ordered categories.} Cambridge, Mass.: Harvard University
+  Press.
 }
 \author{John Hendrickx <\email{John\_Hendrickx@yahoo.com}>}
 
@@ -82,6 +101,7 @@ check.square(rowvar, colvar, equal = TRUE)
 # New York: Academic, page 49
 
 data(FHtab)
+FHtab<-as.data.frame(FHtab)
 attach(FHtab)
 
 xtabs(Freq ~ .,FHtab)
@@ -133,19 +153,21 @@ fitmacro(glm.q0)
 #  2  5  0  8  9
 #  3  6  8  0 10
 #  4  7  9 10  0  */
-glm.qsym<-glm(Freq~OccFather+OccSon+mob.symint(OccFather,OccSon),family=poisson())
+glm.qsym<-
+glm(Freq~OccFather+OccSon+mob.symint(OccFather,OccSon),family=poisson())
 summary(glm.qsym)
 fitmacro(glm.qsym)
 
-symmetry<-glm(Freq~mob.eqmain(OccFather,OccSon)+mob.symint(OccFather,OccSon),family=poisson())
+symmetry<-glm(Freq~mob.eqmain(OccFather,OccSon)
++mob.symint(OccFather,OccSon),family=poisson())
 summary(symmetry)
 fitmacro(symmetry)
 
 # Crossings parameter model (page 35)
-#  0  v1 v1 v1 v1 |  0  0  v2 v2 v2 |  0  0  0  v3 v3 |  0  0  0  0  v4
-#  v1 0  0  0  0  |  0  0  v2 v2 v2 |  0  0  0  v3 v3 |  0  0  0  0  v4
-#  v1 0  0  0  0  |  v2 v2 0  0  0  |  0  0  0  v3 v3 |  0  0  0  0  v4
-#  v1 0  0  0  0  |  v2 v2 0  0  0  |  v3 v3 v3 0  0  |  0  0  0  0  v4
+#  0  v1 v1 v1 v1 |  0  0  v2 v2 v2 |  0  0  0  v3 v3 |  0  0  0  0 v4
+#  v1 0  0  0  0  |  0  0  v2 v2 v2 |  0  0  0  v3 v3 |  0  0  0  0 v4
+#  v1 0  0  0  0  |  v2 v2 0  0  0  |  0  0  0  v3 v3 |  0  0  0  0 v4
+#  v1 0  0  0  0  |  v2 v2 0  0  0  |  v3 v3 v3 0  0  |  0  0  0  0 v4
 #  v1 0  0  0  0  |  v2 v2 0  0  0  |  v3 v3 v3 0  0  |  v4 v4 v4 v4 0
 glm.cp<-glm(Freq~OccFather+OccSon+mob.cp(OccFather,OccSon),family=poisson())
 summary(glm.cp)
@@ -173,3 +195,4 @@ fitmacro(glm.hrc1)
 }
 
 \keyword{multivariate}
+

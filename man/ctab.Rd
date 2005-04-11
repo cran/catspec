@@ -1,53 +1,102 @@
 \name{ctab}
 \alias{ctab}
-%- Also NEED an `\alias' for EACH other topic documented here.
+\alias{print.ctab}
+\alias{summary.ctab}
+\alias{ctab0}
 \title{Percentage tables}
 \description{
-  Prints one-way, two-way or multiway percentage tables
+  Produces one-way, two-way or multi-way percentage tables
+}
+\synopsis{
+ctab(...,dec.places=NULL,digits=NULL,type=NULL,style=NULL,row.vars=NULL,col.vars=NULL,percentages=NULL,addmargins=NULL)
 }
 \usage{
-ctab(..., digits = 2, type = c("n", "row", "column", "total"),
-row.vars = NULL, col.vars = NULL, percentages = TRUE)
+ctab(\dots, dec.places=2, digits=dec.places, type=c("n", "row", "column", "total"),
+style="long", row.vars=NULL, col.vars=NULL, percentages=TRUE, addmargins=FALSE)
+
+ctab0(\dots)
+
+\method{print}{ctab}(x, dec.places=x$dec.places, addmargins=x$addmargins, \dots)
+
+\method{summary}{ctab}(object,\dots)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{\dots}{one or more factors or a table object of class \code{table}, \code{xtabs}, or
-  \code{ftable}}
-  \item{digits}{number of decimal places (default 2)}
-  \item{type}{Row, column, total percentages or counts (\code{type=n})}
-  \item{row.vars}{}
-  \item{col.vars}{Same as \code{\link{ftable}}}
-  \item{percentages}{If \code{FALSE}, proportions rather than percentages are printed}
+\item{\dots}{either
+	\itemize{
+		\item one or more factors,
+		\item a class \code{\link{table}} object,
+		\item a class \code{\link{ftable}} object,
+		\item or a class \code{ctab} object
+	}
+}
+\item{dec.places}{number of decimal places (default 2)}
+\item{digits}{synonym for \code{dec.places}, for compatability with previous version}
+\item{type}{Row, column, total percentages or counts (\code{type= n}). Multiple values may be specified as a character vector. Partial matchin is used.}
+\item{style}{Applicable if more than one percentage type is specified. If \code{style=long}, percentages are printed underneath each other. If \code{style=wide}, the percentages are printed side by side}
+\item{row.vars}{Same as \code{\link{ftable}}: \emph{\dQuote{a vector of integers giving the numbers of the variables, or a character vector giving the names of the variables to be used for the rows of the [] table}}}
+\item{col.vars}{\emph{\dQuote{a vector of integers giving the numbers of the variables, or a character vector giving the names of the variables to be used for the columns of the [] table}}}
+\item{percentages}{If \code{FALSE}, proportions rather than percentages are printed}
+\item{addmargins}{Use \code{addmargins=TRUE} to add subtotals to the table}
+\item{x}{a \code{ctab} object to be printed}
+\item{object}{a \code{ctab} object to be summarized}
 }
 \details{
-  Simplifies the production of (multiway) percentage tables.
+\code{ctab} uses \code{\link{ftable}} and \code{\link{prop.table}} to produce one-way frequency tables, two-way crosstables, or multi-way percentage tables. More than one percentage type may be specified, in which case \dQuote{percentage type} is an unnamed dimension of the table. \code{row.vars} and \code{col.vars} can be used to control the layout of multi-way tables using the facilities of \code{ftable}. Subtotals can be added by specifiying \code{addmargins=TRUE}. Note that \code{[gmodels]}\code{\link[gmodels]{CrossTable}} in the \code{gmodels} package also provides an easy method for producing percentage tables, but only for two-way tables.
+
+If \code{ctab} is specified with no further options and for more than one factor, the output is identical to that of \code{\link{ftable}}. If a single factor is specified, the default is to print the frequencies column-wise with the percentaqes next to them.
 }
 \value{
-  For one-way and two-way tables, a \code{table} object is returned. For three-way and higher tables,
-  an \code{ftable} object is returned.
+An object of class \dQuote{ctab}. \code{print.ctab} prints the table, \code{summary.ctab} passes the frequency table on to \code{\link{summary.table}}, which prints the number of cases, number of factors, and a chi-square test of independence.
+\item{table}{A \code{class(table)} object containing the table counts. Used by \code{summary.ctab} and by \code{ctab} itself if a \code{ctab} object is used as input.}
+\item{ctab}{A \code{class(ftable)} object containing the percentage types specified. This is printed by \code{print.ctab}.}
+\item{row.vars}{The \code{row.vars} options as numeric vectors}
+\item{col.vars}{The \code{col.vars} options as numeric vectors}
+\item{dec.places}{The \code{dec.places} option}
+\item{type}{The \code{type} option}
+\item{style}{The \code{style} option}
+\item{percentages}{The \code{percentages} option}
+\item{addmargins}{The \code{addmargins} option}
 }
 \references{\url{http://www.xs4all.nl/~jhckx/}}
 \author{John Hendrickx <\email{John\_Hendrickx@yahoo.com}>}
-\note{
-If the table contains three or more factors, the first is treated by default as the row variable, the
-second as the column variable, the third and following as grouping variables. This can be overridden
-using \code{row.vars} and/or \code{col.vars}. Note that  \code{\link[pkg:gregmisc]{CrossTable}} in
-the \code{gregmisc} package also provides an easy method for producing percentage tables but only for
-two-way tables.
+\section{Changed defaults in version 0.91}{
+In version 0.90 of the \code{catspec} package, the default was to treat the first factor as row variable, the second as column variable, the third and following as grouping variables. In version 0.91, the \code{ftable} defaults are used instead. Use \code{ctab0} to get the same variable order as before. \code{ctab0} will print a line showing the \code{row.vars} and \code{col.vars} specifications to be used in future, as well as the regular output.
+
+The option name \code{digits} has been replaced by \code{dec.places}, which I consider clearer. \code{digits} remains a synonym for \code{dec.places}.
 }
 
-\seealso{\code{\link{table}}, \code{\link{ftable}}, \code{\link{xtabs}}, \code{\link{prop.table}},
-\code{\link[pkg:gregmisc]{CrossTable}}
+\seealso{\code{\link{table}}, \code{\link{ftable}}, \code{\link{addmargins}}, \code{\link{prop.table}}, \code{\link{xtabs}}, \code{[gmodels]}\code{\link[gmodels]{CrossTable}}
 }
 
 \examples{
-data(Titanic)
-ctab(Titanic)
+ftable(Titanic)
+ctab(Titanic) # same output
 ctab(Titanic,type="r")
-ctab(Titanic,row.vars=1:3,type="r")
-ctab(Titanic,col.vars=c(2,4),type="r")
-ctab(Titanic,row.vars=c(1,3),type="c")
-ctab(Titanic,col.vars=c("Sex","Survived"),type="r")
-ctab(Titanic,col.vars=c("Sex","Survived"),type="t")
+ctab(Titanic,type=c("n","r"),addmargins=TRUE)
+ctab(Titanic,type=c("n","c","t","r"),style="w")
+mytab<-ftable(Titanic,row.vars=c(1,3),type="r")
+mytab
+ctab(mytab)
+newtab<-ctab(mytab,type="r")
+newtab
+summary(newtab)
+ctab0(Titanic,type="r")
+
+#second example using a data frame rather than table data
+data(logan)
+class(logan) #"data.frame"
+ctab(occ)
+ctab(occ,addmargins=TRUE)
+ctab(occ,style="w",type="c")
+ctab(occ,style="l",type="n")
+z<-ctab(occ,addmargins=TRUE,style="l")
+z
+print(z,addmargins=FALSE,dec.places=5)
+summary(z)
+
+t<-ctab(focc,occ,type=c("n","r","c"))
+t
+summary(t)
 }
 \keyword{category}
+

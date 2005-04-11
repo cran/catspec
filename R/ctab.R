@@ -12,115 +12,189 @@
 
 # comments to John Hendrickx <John_Hendrickx@yahoo.com>
 
-ctab<-function(...,digits=2,
-        type=c("n", "row", "column", "total"),
-        row.vars=NULL, col.vars=NULL,
-        percentages=TRUE) {
-    if (attributes(...)$class=="factor") {
-        # create a table if the arguments are factors
-        tbl<-table(...)
-    }
-    else if ("table" %in% class(...) || class(...)=="ftable") {
-        # the argument is a table object (table, xtabs, ftable)
-        tbl<-eval(...)
-    }
-    else {
-        stop("first argument must be either factors or a table object")
-    }
+ctab<-function(...,dec.places=NULL,digits=NULL,type=NULL,style=NULL,row.vars=NULL,col.vars=NULL,percentages=NULL,addmargins=NULL) {
+	mk.pcnt.tbl<-function(tbl,type) {
+		a<-length(row.vars)
+		b<-length(col.vars)
+		mrgn<-switch(type,
+			column=c(row.vars[-a],col.vars),
+			   row=c(row.vars,col.vars[-b]),
+			 total=c(row.vars[-a],col.vars[-b]))
+		tbl<-prop.table(tbl,mrgn)
+		if (percentages) {tbl<-tbl*100}
+		tbl
+	}
 
-    type<-match.arg(type)
+	# options have default NULL so attributes of a ctab object can be used as default
+	# defaults for other classes are assigned below
+	if (attributes(...)$class=="factor") {
+		tbl<-table(...)
+	}
+	else if ("table" %in% class(...)) {
+		tbl<-eval(...)
+	}
+	else if (class(...)=="ftable") {
+		tbl<-eval(...)
+		if (is.null(row.vars) && is.null(col.vars)) {
+			row.vars<-names(attr(tbl,"row.vars"))
+			col.vars<-names(attr(tbl,"col.vars"))
+		}
+		tbl<-as.table(tbl)
+	}
+	else if (class(...)=="ctab") {
+		tbl<-eval(...)
+		if (is.null(row.vars) && is.null(col.vars)) {
+			row.vars<-tbl$row.vars
+			col.vars<-tbl$col.vars
+		}
+		for (opt in c("dec.places","type","style","percentages","addmargins")) if (is.null(get(opt))) assign(opt,eval(parse(text=paste("tbl$",opt,sep=""))))
+		tbl<-tbl$table
+	}
+	else {
+		stop("first argument must be either factors or a table object")
+	}
 
-    # one dimensional table,restrict choices to "n" and "total"
-    if (length(dim(tbl))==1) {
-        type<-ifelse(type=="n","n","total")
-    }
+	# defaults for options and checks for valid values
+	if (!is.null(digits)) dec.places<-digits
+	if (is.null(dec.places)) dec.places<-2
+	stopifnot(as.integer(dec.places)==dec.places,dec.places>0)
+	if (is.null(percentages)) percentages<-TRUE
+	stopifnot(is.logical(percentages))
+	if (is.null(addmargins)) addmargins<-FALSE
+	stopifnot(is.logical(addmargins))
 
-    # if the object is an ftable, use the row.vars and col.vars
-    # use numeric indices to avoid finding the omitted
-    # the object must be converted to a table to get the dimensions right
-    if (class(tbl)=="ftable") {
-        nrowvar<-length(names(attr(tbl,"row.vars")))
-        row.vars<-1:nrowvar
-        col.vars<-(1:length(names(attr(tbl,"col.vars"))))+nrowvar
-        tbl<-as.table(tbl)
-    }
+	types<-NULL
+	choices<-c("n", "row", "column", "total")
+	for(tp in type) types<-c(types,match.arg(tp,choices))
+	type<-types
 
-    # marginals to exclude assuming first factor is the row vaariable,
-    # second factor is the column variable
-    # is overridden by row.vars or col.vars
-    mrg2drop<-0
-    if (type=="column") {mrg2drop<-1}
-    if (type=="row") {mrg2drop<-2}
-    if (type=="total" && length(dim(tbl)) > 1) {mrg2drop<-c(1,2)}
+	# one dimensional table,restrict choices to "n" and "total"
+	if (length(dim(tbl))==1) {
+		if (is.null(type)) {
+			type<-c("n","total")
+			row.vars<-1
+			if (is.null(style)) style<-"wide"
+		}
+		else type<-ifelse(type=="n","n","total")
+	}
+	else if (is.null(type)) type<-"n"
+	style<-match.arg(style,c("long","wide"))
+	if (is.null(style)) style<-"long"
 
+	# use row.vars and col.vars to determine the
+	# marginals to use when calculating percentages
+	# start by translating names to variable positions
+	nms<-names(dimnames(tbl))
+	z<-length(nms)
+	if (!is.null(row.vars) && !is.numeric(row.vars)) {
+		row.vars<-order(match(nms,row.vars),na.last=NA)
+	}
+	if (!is.null(col.vars) && !is.numeric(col.vars)) {
+		col.vars<-order(match(nms,col.vars),na.last=NA)
+	}
+	# calculate the other if only one is given
+	if (!is.null(row.vars) && is.null(col.vars)) {
+		col.vars<-(1:z)[-row.vars]
+	}
+	if (!is.null(col.vars) && is.null(row.vars)) {
+		row.vars<-(1:z)[-col.vars]
+	}
+	# evidently, both row.vars and col.vars were NULL
+	# assign the last variable to col.vars, the rest to row.vars
+	if (is.null(row.vars) && is.null(col.vars)) {
+		col.vars<-z
+		row.vars<-(1:z)[-col.vars]
+	}
 
-    # use row.vars and col.vars to determine the
-    # marginals to use when calculating percentages
-    # start by translating names to variable positions
-    nms<-names(dimnames(tbl))
-    if (!is.null(row.vars) && !is.numeric(row.vars)) {
-        row.vars<-order(match(nms,row.vars),na.last=NA)
-    }
-    if (!is.null(col.vars) && !is.numeric(col.vars)) {
-        col.vars<-order(match(nms,col.vars),na.last=NA)
-    }
-    # calculate the other if only one is given
-    if (!is.null(row.vars) && is.null(col.vars)) {
-        col.vars<-(1:length(dim(tbl)))[-row.vars]
-    }
-    if (!is.null(col.vars) && is.null(row.vars)) {
-        row.vars<-(1:length(dim(tbl)))[-col.vars]
-    }
-    # now determine the margin as the last element
-    if (type=="row" && !is.null(col.vars)) {
-        mrg2drop<-col.vars[length(col.vars)]
-    }
-    if (type=="column" && !is.null(row.vars)) {
-        mrg2drop<-row.vars[length(row.vars)]
-    }
-    # if row.vars is given, col.vars has been determined
-    if (type=="total" && !is.null(row.vars)) {
-        mrg2drop<-c(col.vars[length(col.vars)],row.vars[length(row.vars)])
-    }
+	if (type[1] == "n") ctab <- tbl
+	else ctab<-mk.pcnt.tbl(tbl,type[1])
 
-    marg<-(1:length(dim(tbl)))[(-mrg2drop)]
+	if (length(type) > 1) {
+		# create the (percentage) tables, then convert them to data frames
+		# stack the data frames, adding a new variable as percentage type
+		tbldat<-as.data.frame.table(ctab)
+		z<-length(names(tbldat))+1
+		tbldat[z]<-1
+		pcntlab<-type
+		pcntlab[match("n",type)]<-"Count"
+		pcntlab[match("row",type)]<-"Row %"
+		pcntlab[match("column",type)]<-"Column %"
+		pcntlab[match("total",type)]<-"Total %"
+		for (i in 2:length(type)) {
+			if (type[i] == "n") ctab <- tbl
+			else ctab<-mk.pcnt.tbl(tbl,type[i])
+			ctab<-as.data.frame.table(ctab)
+			ctab[z]<-i
+			tbldat<-rbind(tbldat,ctab)
+		}
+		tbldat[[z]]<-as.factor(tbldat[[z]])
+		levels(tbldat[[z]])<-pcntlab
+		ctab<-xtabs(Freq ~ .,data=tbldat)
+		names(dimnames(ctab))[z-1]<-""
+	}
 
-    # create percentages
-    if (type=="n") {
-        digits<-0
-    }
-    else {
-        tbl<-prop.table(tbl,marg)
-        if (percentages) {tbl<-tbl*100}
-    }
-
-
-    # use ftable for more than 2 dimensions
-    # (ftable doesn't work for 1 dimension,
-    # and table is nicer for 2 dimensions IMHO
-    if (length(dim(tbl))>2) {
-        if (is.null(row.vars)) {
-            # let the second variable be the column variable
-            row.vars<-names(dimnames(tbl))[-2]
-            # reverse the order, last variables are groups, first is row variable
-            row.vars<-rev(row.vars)
-        }
-        tbl<-ftable(tbl,row.vars=row.vars,col.vars=col.vars)
-    }
-
-    # get the names of the column variable
-    if (class(tbl)=="ftable") {
-        nms<-attr(tbl,"col.vars")[[1]]
-    }
-    else if (length(dim(tbl))==1) {
-        nms<-dimnames(tbl)[[1]]
-    }
-    else{
-        nms<-dimnames(tbl)[[2]]
-    }
-
-    # present the (percentage) table
-    wd<-max(nchar(nms),nchar(as.integer(tbl))+digits+1)
-    tbl<-formatC(tbl,format="f",width=wd,digits=digits)
-    tbl
+	result<-NULL
+	result$row.vars<-row.vars
+	result$col.vars<-col.vars
+	result$dec.places<-dec.places
+	result$type<-type
+	result$style<-style
+	result$percentages<-percentages
+	result$addmargins<-addmargins
+	result$ctab<-ctab
+	result$table<-tbl
+	class(result)<-"ctab"
+	result
 }
+
+print.ctab<-function(x,dec.places=x$dec.places,addmargins=x$addmargins,...) {
+	if (length(dim(x$ctab))==1) {
+		tbl<-x$ctab
+		if (addmargins) tbl<-addmargins(tbl)
+		if (x$style=="long") {
+			tbl<-as.matrix(tbl)
+			colnames(tbl)<-names(dimnames(x$ctab))
+		}
+	}
+	else {
+		row.vars<-x$row.vars
+		col.vars<-x$col.vars
+		a=length(row.vars)
+		if (length(x$type)>1) {
+			z<-length(names(dimnames(x$ctab)))
+			if (x$style=="long") row.vars<-c(row.vars,z)
+			else col.vars<-c(z,col.vars)
+		}
+		b=length(col.vars)
+		tbl<-x$ctab
+		mrgn<-c(row.vars[a],col.vars[b])
+		# if the table contains counts and percentages of a factor
+		if (length(dim(x$table))==1) mrgn<-1
+		if (addmargins) tbl<-addmargins(tbl,margin=mrgn)
+		tbl<-ftable(tbl,row.vars=row.vars,col.vars=col.vars)
+	}
+
+	if (!all(as.integer(tbl)==as.numeric(tbl))) tbl<-round(tbl,dec.places)
+	print(tbl,...)
+}
+
+summary.ctab<-function(object,...) {
+	summary(object$table,...)
+}
+
+ctab0<-function(...) {
+	specs<-substitute(expression(...))
+	specs<-sub("^expression\\(\(.*\)\\)$","\\1", deparse(specs))
+	result<-ctab(...)
+
+	if (length(grep("col.vars",specs,fixed=TRUE))==0 & length(grep("row.vars",specs,fixed=TRUE))==0) {
+		indx<-c(result$row.vars,result$col.vars)
+		k<-length(indx)
+		rv<-paste(rev(indx[-2]),sep="",collapse=",")
+		cmd<-paste("ctab(",specs,", row.vars=c(",rv,"), col.vars=2)",sep="")
+		cat("For future use:\n",cmd,"\n")
+		result<-eval(parse(text=cmd))
+	}
+	result
+}
+

@@ -1,0 +1,13 @@
+Version 0.91
+* major changes to ctab
+- multiple percentage types in one table
+- marginals
+- default variable order now same as ftable
+- value is a ctab object
+- S3 print and summary methods
+* FHtab now produces a table object rather than a data frame
+* Rd files for the datasets no longer produce a warning
+  in R 2.1 (beta)
+
+Version 0.9
+First release at CRAN
