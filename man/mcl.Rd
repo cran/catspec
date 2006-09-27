@@ -2,7 +2,7 @@
 
 \alias{mclgen}
 
-\title{Restructure a data-frame as a "person-choice" file}
+\title{Restructure a data-frame as a person-choice file}
 
 \description{
 \code{mclgen} restructures a data-frame into a \emph{person-choice}

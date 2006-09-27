@@ -111,7 +111,7 @@ indep<-glm(Freq~OccFather+OccSon,family=poisson())
 summary(indep)
 fitmacro(indep)
 
-wt <- (OccFather != OccSon)
+wt <- as.numeric(OccFather != OccSon)
 qi0<-glm(Freq~OccFather+OccSon,weights=wt,family=poisson())
 # A quasi-independence loglinear model, using structural zeros
 # (page 23 of "Mobility Tables").

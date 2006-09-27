@@ -21,14 +21,12 @@ ctab0(\dots)
 \method{summary}{ctab}(object,\dots)
 }
 \arguments{
-\item{\dots}{either
-	\itemize{
-		\item one or more factors,
-		\item a class \code{\link{table}} object,
-		\item a class \code{\link{ftable}} object,
-		\item or a class \code{ctab} object
-	}
-}
+\item{\dots}{either \itemize{
+	\item one or more factors,
+	\item a class \code{\link{table}}
+	\item a class \code{\link{ftable}} table object,
+	\item or a class \code{ctab} table object
+}}
 \item{dec.places}{number of decimal places (default 2)}
 \item{digits}{synonym for \code{dec.places}, for compatability with previous version}
 \item{type}{Row, column, total percentages or counts (\code{type= n}). Multiple values may be specified as a character vector. Partial matchin is used.}
@@ -37,8 +35,8 @@ ctab0(\dots)
 \item{col.vars}{\emph{\dQuote{a vector of integers giving the numbers of the variables, or a character vector giving the names of the variables to be used for the columns of the [] table}}}
 \item{percentages}{If \code{FALSE}, proportions rather than percentages are printed}
 \item{addmargins}{Use \code{addmargins=TRUE} to add subtotals to the table}
-\item{x}{a \code{ctab} object to be printed}
-\item{object}{a \code{ctab} object to be summarized}
+\item{x}{is a tables object created by \code{ctab}}
+\item{object}{is a tables object created by \code{ctab}}
 }
 \details{
 \code{ctab} uses \code{\link{ftable}} and \code{\link{prop.table}} to produce one-way frequency tables, two-way crosstables, or multi-way percentage tables. More than one percentage type may be specified, in which case \dQuote{percentage type} is an unnamed dimension of the table. \code{row.vars} and \code{col.vars} can be used to control the layout of multi-way tables using the facilities of \code{ftable}. Subtotals can be added by specifiying \code{addmargins=TRUE}. Note that \code{[gmodels]}\code{\link[gmodels]{CrossTable}} in the \code{gmodels} package also provides an easy method for producing percentage tables, but only for two-way tables.
