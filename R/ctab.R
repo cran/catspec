@@ -184,7 +184,7 @@ summary.ctab<-function(object,...) {
 
 ctab0<-function(...) {
 	specs<-substitute(expression(...))
-	specs<-sub("^expression\\(\(.*\)\\)$","\\1", deparse(specs))
+	specs<-sub("^expression\\((.*)\\)$","\\1", deparse(specs))
 	result<-ctab(...)
 
 	if (length(grep("col.vars",specs,fixed=TRUE))==0 & length(grep("row.vars",specs,fixed=TRUE))==0) {

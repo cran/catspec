@@ -1,5 +1,5 @@
 Package: catspec
-Version: 0.92
+Version: 0.93
 Title: Special models for categorical variables
 Author: John Hendrickx <John_Hendrickx@yahoo.com>
 Maintainer: John Hendrickx <John_Hendrickx@yahoo.com>
@@ -15,4 +15,4 @@ Description: `sqtab' contains a set of functions for estimating
   `ctab' simplifies the production of (multiway( percentage tables.
 License: GPL version 2 or newer
 URL: http://www.xs4all.nl/~jhckx/
-Packaged: Wed Sep 27 18:37:39 2006; John Hendrickx
+Packaged: Thu Dec  6 22:12:12 2007; John
