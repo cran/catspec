@@ -27,31 +27,45 @@ ctab<-function(...,dec.places=NULL,digits=NULL,type=NULL,style=NULL,row.vars=NUL
 
 	# options have default NULL so attributes of a ctab object can be used as default
 	# defaults for other classes are assigned below
-	if (attributes(...)$class=="factor") {
+	
+	# 01JUN2010
+	# Starting R version 2.11.0, it is no longer possible to use attributes(...)
+	# if dot-dot-dot contains more than one object, e.g. for ctab(focc,occ)
+	# Place "..." in a list and create a table object if the list has a length
+	# > 1. If "..." contains a single object, proceed a before
+	args<-list(...)
+	if (length(args) > 1) {
+		if (!all(sapply(args,is.factor))) stop("If more than one argument is passed then all must be factors")
 		tbl<-table(...)
 	}
-	else if ("table" %in% class(...)) {
-		tbl<-eval(...)
-	}
-	else if (class(...)=="ftable") {
-		tbl<-eval(...)
-		if (is.null(row.vars) && is.null(col.vars)) {
-			row.vars<-names(attr(tbl,"row.vars"))
-			col.vars<-names(attr(tbl,"col.vars"))
-		}
-		tbl<-as.table(tbl)
-	}
-	else if (class(...)=="ctab") {
-		tbl<-eval(...)
-		if (is.null(row.vars) && is.null(col.vars)) {
-			row.vars<-tbl$row.vars
-			col.vars<-tbl$col.vars
-		}
-		for (opt in c("dec.places","type","style","percentages","addmargins")) if (is.null(get(opt))) assign(opt,eval(parse(text=paste("tbl$",opt,sep=""))))
-		tbl<-tbl$table
-	}
 	else {
-		stop("first argument must be either factors or a table object")
+		if (attributes(...)$class=="factor") {
+			tbl<-table(...)
+		}
+
+		else if ("table" %in% class(...)) {
+			tbl<-eval(...)
+		}
+		else if (class(...)=="ftable") {
+			tbl<-eval(...)
+			if (is.null(row.vars) && is.null(col.vars)) {
+				row.vars<-names(attr(tbl,"row.vars"))
+				col.vars<-names(attr(tbl,"col.vars"))
+			}
+			tbl<-as.table(tbl)
+		}
+		else if (class(...)=="ctab") {
+			tbl<-eval(...)
+			if (is.null(row.vars) && is.null(col.vars)) {
+				row.vars<-tbl$row.vars
+				col.vars<-tbl$col.vars
+			}
+			for (opt in c("dec.places","type","style","percentages","addmargins")) if (is.null(get(opt))) assign(opt,eval(parse(text=paste("tbl$",opt,sep=""))))
+			tbl<-tbl$table
+		}
+		else {
+			stop("first argument must be either factors or a table object")
+		}
 	}
 
 	# defaults for options and checks for valid values
@@ -180,21 +194,5 @@ print.ctab<-function(x,dec.places=x$dec.places,addmargins=x$addmargins,...) {
 
 summary.ctab<-function(object,...) {
 	summary(object$table,...)
-}
-
-ctab0<-function(...) {
-	specs<-substitute(expression(...))
-	specs<-sub("^expression\\((.*)\\)$","\\1", deparse(specs))
-	result<-ctab(...)
-
-	if (length(grep("col.vars",specs,fixed=TRUE))==0 & length(grep("row.vars",specs,fixed=TRUE))==0) {
-		indx<-c(result$row.vars,result$col.vars)
-		k<-length(indx)
-		rv<-paste(rev(indx[-2]),sep="",collapse=",")
-		cmd<-paste("ctab(",specs,", row.vars=c(",rv,"), col.vars=2)",sep="")
-		cat("For future use:\n",cmd,"\n")
-		result<-eval(parse(text=cmd))
-	}
-	result
 }
 

@@ -13,72 +13,54 @@
 \title{sqtab: models for square tables}
 
 \description{
-These functions are used to estimate loglinear models for square tables such as quasi-independence, quasi-symmetry.
+	These functions are used to estimate loglinear models for square tables such as quasi-independence, quasi-symmetry.
 }
 
 \usage{
-mob.qi(rowvar, colvar, constrained = FALSE, print.labels = FALSE)
-mob.eqmain(rowvar, colvar, print.labels = FALSE)
-mob.symint(rowvar, colvar, print.labels = FALSE)
-mob.cp(rowvar,colvar)
-mob.unif(rowvar, colvar)
-mob.rc1(rowvar, colvar, equal = FALSE, print.labels = FALSE)
-fitmacro(object)
-check.square(rowvar, colvar, equal = TRUE)
+	mob.qi(rowvar, colvar, constrained = FALSE, print.labels = FALSE)
+	mob.eqmain(rowvar, colvar, print.labels = FALSE)
+	mob.symint(rowvar, colvar, print.labels = FALSE)
+	mob.cp(rowvar,colvar)
+	mob.unif(rowvar, colvar)
+	mob.rc1(rowvar, colvar, equal = FALSE, print.labels = FALSE)
+	fitmacro(object)
+	check.square(rowvar, colvar, equal = TRUE)
 }
 
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{rowvar}{Factor representing the row variable}
-  \item{colvar}{Factor representing the column variable}
-  \item{print.labels}{If FALSE (default) then numeric values rather
-  than factor values are printed for compact results}
-  \item{equal}{(\code{mob.rc1}) If TRUE, a homogeneous row and column
-  effects model 1 with equal scale values for the row and column
-  variables is estimated. Otherwise, a (regular) RC1 model is
-  estimated with different scale values for the row and column
-  variables
-  \cr
-  (\code{check.square}) If TRUE, the row and column variables must
-  have the same number of categories}
-  \item{constrained}{(\code{mob.qi})If TRUE, a quasi-independence
-  model-constrained is estimated with a single parameter for the
-  diagonal cells}
-  \item{object}{(\code{fitmacro}) An object of class \code{glm} for
-  \code{family=poisson} and \code{link=log}}
-}
+	\item{rowvar}{Factor representing the row variable}
+	\item{colvar}{Factor representing the column variable}
+	\item{print.labels}{If FALSE (default) then numeric values rather
+	than factor values are printed for compact results}
+	\item{equal}{(\code{mob.rc1}) If TRUE, a homogeneous row and column effects model 1 with equal scale values for the row and column variables is estimated. Otherwise, a (regular) RC1 model is estimated with different scale values for the row and column variables
+	\cr
+	(\code{check.square}) If TRUE, the row and column variables must have the same number of categories}
+	\item{constrained}{(\code{mob.qi})If TRUE, a quasi-independence model-constrained is estimated with a single parameter for the diagonal cells}
+	\item{object}{(\code{fitmacro}) An object of class \code{glm} for \code{family=poisson} and \code{link=log} } }
 \details{
-  These functions are used to estimate loglinear models for square
-  tables:
-  \item{mob.qi}{Quasi-independence}
-  \item{mob.eqmain}{Equal main effects (Hope's halfway model)}
-  \item{mob.symint}{Symmetric interaction}
-  \item{mob.cp}{Crossings-parameter model}
-  \item{mob.unif}{Uniform association}
-  \item{mob.rc1}{Row and columns model 1}
-  \item{fitmacro}{Calculates \code{BIC} and \code{AIC} relative to a
-  saturated loglinear model}
-  \item{check.square}{Internal function to check if row and column
-  variables are both factors with the same number of levels}
-
+	These functions are used to estimate loglinear models for square tables:
+	\describe{
+		\item{mob.qi}{Quasi-independence}
+		\item{mob.eqmain}{Equal main effects (Hope's halfway model)}
+		\item{mob.symint}{Symmetric interaction}
+		\item{mob.cp}{Crossings-parameter model}
+		\item{mob.unif}{Uniform association}
+		\item{mob.rc1}{Row and columns model 1}
+		\item{fitmacro}{Calculates \code{BIC} and \code{AIC} relative to a
+		saturated loglinear model}
+		\item{check.square}{Internal function to check if row and column variables are both factors with the same number of levels}
+	}
 }
 \value{
-  \item{mob.qi}{A factor that will produce coefficients for the
-  diagonal cells of a table, using off-
-  diagonal cells as base category}
-  \item{mob.eqmain}{A design matrix with equality contraints on the
-  main effects}
-  \item{mob.symint}{A design matrix for an interaction with equality
-  contraints on coefficients on
-  opposite sides of the diagonal}
-  \item{mob.cp}{A set of vectors for a crossings-parameter model}
-  \item{mob.unif}{A vector for a uniform association model}
-  \item{mob.rc1}{A set of vectors for a row and columns model 1}
-  \item{fitmacro}{Prints deviance, df, BIC, AIC, number of parameters
-  and N}
-  \item{check.square}{Stops function if either the row or column
-  variable is not a factor or if the
-  number of levels is unequal}
+	\item{mob.qi}{A factor that will produce coefficients for the diagonal cells of a table, using off- diagonal cells as base category}
+	\item{mob.eqmain}{A design matrix with equality contraints on the main effects}
+	\item{mob.symint}{A design matrix for an interaction with equality contraints on coefficients on opposite sides of the diagonal}
+	\item{mob.cp}{A set of vectors for a crossings-parameter model}
+	\item{mob.unif}{A vector for a uniform association model}
+	\item{mob.rc1}{A set of vectors for a row and columns model 1}
+	\item{fitmacro}{Prints deviance, df, BIC, AIC, number of parameters and N}
+	\item{check.square}{Stops function if either the row or column variable is not a factor or if the number of levels is unequal}
 }
 \references{
   Hout, Michael. (1983). \emph{Mobility Tables}. Sage Publication

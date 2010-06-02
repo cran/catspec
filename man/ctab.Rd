@@ -2,7 +2,6 @@
 \alias{ctab}
 \alias{print.ctab}
 \alias{summary.ctab}
-\alias{ctab0}
 \title{Percentage tables}
 \description{
   Produces one-way, two-way or multi-way percentage tables
@@ -13,8 +12,6 @@ ctab(...,dec.places=NULL,digits=NULL,type=NULL,style=NULL,row.vars=NULL,col.vars
 \usage{
 ctab(\dots, dec.places=2, digits=dec.places, type=c("n", "row", "column", "total"),
 style="long", row.vars=NULL, col.vars=NULL, percentages=TRUE, addmargins=FALSE)
-
-ctab0(\dots)
 
 \method{print}{ctab}(x, dec.places=x$dec.places, addmargins=x$addmargins, \dots)
 
@@ -57,12 +54,6 @@ An object of class \dQuote{ctab}. \code{print.ctab} prints the table, \code{summ
 }
 \references{\url{http://www.xs4all.nl/~jhckx/}}
 \author{John Hendrickx <\email{John\_Hendrickx@yahoo.com}>}
-\section{Changed defaults in version 0.91}{
-In version 0.90 of the \code{catspec} package, the default was to treat the first factor as row variable, the second as column variable, the third and following as grouping variables. In version 0.91, the \code{ftable} defaults are used instead. Use \code{ctab0} to get the same variable order as before. \code{ctab0} will print a line showing the \code{row.vars} and \code{col.vars} specifications to be used in future, as well as the regular output.
-
-The option name \code{digits} has been replaced by \code{dec.places}, which I consider clearer. \code{digits} remains a synonym for \code{dec.places}.
-}
-
 \seealso{\code{\link{table}}, \code{\link{ftable}}, \code{\link{addmargins}}, \code{\link{prop.table}}, \code{\link{xtabs}}, \code{[gmodels]}\code{\link[gmodels]{CrossTable}}
 }
 
@@ -78,7 +69,6 @@ ctab(mytab)
 newtab<-ctab(mytab,type="r")
 newtab
 summary(newtab)
-ctab0(Titanic,type="r")
 
 #second example using a data frame rather than table data
 data(logan)
