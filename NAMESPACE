@@ -1,0 +1,5 @@
+export(ctab,mclgen,fitmacro,mob.qi,mob.eqmain,mob.symint,mob.cp,mob.unif,mob.rc1,check.square)
+
+S3method(summary, ctab)
+S3method(print, ctab)
+

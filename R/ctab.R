@@ -39,11 +39,10 @@ ctab<-function(...,dec.places=NULL,digits=NULL,type=NULL,style=NULL,row.vars=NUL
 		tbl<-table(...)
 	}
 	else {
-		if (attributes(...)$class=="factor") {
+		if (is.factor(...)) {
 			tbl<-table(...)
 		}
-
-		else if ("table" %in% class(...)) {
+		else if (is.table(...)) {
 			tbl<-eval(...)
 		}
 		else if (class(...)=="ftable") {

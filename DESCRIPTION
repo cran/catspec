@@ -1,20 +1,17 @@
 Package: catspec
-Version: 0.95
+Version: 0.96
 Title: Special models for categorical variables
 Author: John Hendrickx <John_Hendrickx@yahoo.com>
 Maintainer: John Hendrickx <John_Hendrickx@yahoo.com>
-Description: `sqtab' contains a set of functions for estimating
-        loglinear models for square tables such as quasi-independence,
-        symmetry, uniform association. `mclgen' restructures a
-        dataframe to enable the estimation of a multinomial logistic
-        model using the conditional logit program `clogit'. This allows
-        greater flexibility in imposing constraints on the response
-        variable. One application is to specify aforementioned models
-        for square tables as multinomial logistic models with
-        covariates at the respondent level. `ctab' simplifies the
-        production of (multiway( percentage tables.
+Description: `ctab' creates (multiway) percentage tables. `sqtab'
+        contains a set of functions for estimating models for square
+        tables such as quasi-independence, symmetry, uniform
+        association. Examples show how to use these models in a
+        loglinear model using glm or in a multinomial logistic model
+        using mlogit or clogit
+Suggests: mlogit,survival
 License: GPL (>= 2)
 URL: http://home.wanadoo.nl/john.hendrickx/statres/
-Packaged: 2010-06-02 18:56:52 UTC; john
+Packaged: 2012-03-04 21:27:11 UTC; john
 Repository: CRAN
-Date/Publication: 2010-06-03 13:49:33
+Date/Publication: 2012-03-05 07:24:31

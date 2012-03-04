@@ -1,0 +1,7 @@
+Version 0.96, 04MAR2012
+- Fixed bug in ctab, could not handle ordered factors
+- Removed dataset logan, use survival::logan instead
+- Removed datast FHtab, included in the examples for sqtab
+- Removed mclgen, use mlogit::mlogit.data instead; see ?sqtab for examples
+- Added NAMESPACE
+Version 0.95, 02JUN2010

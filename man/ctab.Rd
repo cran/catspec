@@ -36,7 +36,9 @@ style="long", row.vars=NULL, col.vars=NULL, percentages=TRUE, addmargins=FALSE)
 \item{object}{is a tables object created by \code{ctab}}
 }
 \details{
-\code{ctab} uses \code{\link{ftable}} and \code{\link{prop.table}} to produce one-way frequency tables, two-way crosstables, or multi-way percentage tables. More than one percentage type may be specified, in which case \dQuote{percentage type} is an unnamed dimension of the table. \code{row.vars} and \code{col.vars} can be used to control the layout of multi-way tables using the facilities of \code{ftable}. Subtotals can be added by specifiying \code{addmargins=TRUE}. Note that \code{[gmodels]}\code{\link[gmodels]{CrossTable}} in the \code{gmodels} package also provides an easy method for producing percentage tables, but only for two-way tables.
+\code{ctab} uses \code{\link{ftable}} and \code{\link{prop.table}} to produce one-way frequency tables, two-way crosstables, or multi-way percentage tables. More than one percentage type may be specified, in which case \dQuote{percentage type} is an unnamed dimension of the table. \code{row.vars} and \code{col.vars} can be used to control the layout of multi-way tables using the facilities of \code{ftable}. Subtotals can be added by specifiying \code{addmargins=TRUE}. 
+
+\code{\link[gmodels]{CrossTable}} in the \code{gmodels} package also provides an easy method for producing percentage tables, but is restricted to two-way tables.
 
 If \code{ctab} is specified with no further options and for more than one factor, the output is identical to that of \code{\link{ftable}}. If a single factor is specified, the default is to print the frequencies column-wise with the percentaqes next to them.
 }
@@ -52,8 +54,8 @@ An object of class \dQuote{ctab}. \code{print.ctab} prints the table, \code{summ
 \item{percentages}{The \code{percentages} option}
 \item{addmargins}{The \code{addmargins} option}
 }
-\references{\url{http://www.xs4all.nl/~jhckx/}}
-\author{John Hendrickx <\email{John\_Hendrickx@yahoo.com}>}
+\references{\url{http://home.wanadoo.nl/john.hendrickx/statres/}}
+\author{John Hendrickx <\email{John_Hendrickx@yahoo.com}>}
 \seealso{\code{\link{table}}, \code{\link{ftable}}, \code{\link{addmargins}}, \code{\link{prop.table}}, \code{\link{xtabs}}, \code{[gmodels]}\code{\link[gmodels]{CrossTable}}
 }
 
@@ -71,18 +73,20 @@ newtab
 summary(newtab)
 
 #second example using a data frame rather than table data
+library(survival)
 data(logan)
+attach(logan)
 class(logan) #"data.frame"
-ctab(occ)
-ctab(occ,addmargins=TRUE)
-ctab(occ,style="w",type="c")
-ctab(occ,style="l",type="n")
-z<-ctab(occ,addmargins=TRUE,style="l")
+ctab(occupation)
+ctab(occupation,addmargins=TRUE)
+ctab(occupation,style="w",type="c")
+ctab(occupation,style="l",type="n")
+z<-ctab(occupation,addmargins=TRUE,style="l")
 z
 print(z,addmargins=FALSE,dec.places=5)
 summary(z)
 
-t<-ctab(focc,occ,type=c("n","r","c"))
+t<-ctab(focc,occupation,type=c("n","r","c"))
 t
 summary(t)
 }
