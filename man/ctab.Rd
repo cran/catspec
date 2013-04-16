@@ -6,12 +6,8 @@
 \description{
   Produces one-way, two-way or multi-way percentage tables
 }
-\synopsis{
-ctab(...,dec.places=NULL,digits=NULL,type=NULL,style=NULL,row.vars=NULL,col.vars=NULL,percentages=NULL,addmargins=NULL)
-}
 \usage{
-ctab(\dots, dec.places=2, digits=dec.places, type=c("n", "row", "column", "total"),
-style="long", row.vars=NULL, col.vars=NULL, percentages=TRUE, addmargins=FALSE)
+ctab(\dots,dec.places=NULL,digits=NULL,type=NULL,style=NULL,row.vars=NULL,col.vars=NULL,percentages=NULL,addmargins=NULL)
 
 \method{print}{ctab}(x, dec.places=x$dec.places, addmargins=x$addmargins, \dots)
 
@@ -36,6 +32,13 @@ style="long", row.vars=NULL, col.vars=NULL, percentages=TRUE, addmargins=FALSE)
 \item{object}{is a tables object created by \code{ctab}}
 }
 \details{
+Options have default NULL so attributes of a ctab object can be used as default.
+In other cases, the following options will be used if nothing has been specified:
+\preformatted{
+ctab(\dots, dec.places=2, digits=dec.places, type=c("n", "row", "column", "total"),
+style="long", row.vars=NULL, col.vars=NULL, percentages=TRUE, addmargins=FALSE)
+}
+
 \code{ctab} uses \code{\link{ftable}} and \code{\link{prop.table}} to produce one-way frequency tables, two-way crosstables, or multi-way percentage tables. More than one percentage type may be specified, in which case \dQuote{percentage type} is an unnamed dimension of the table. \code{row.vars} and \code{col.vars} can be used to control the layout of multi-way tables using the facilities of \code{ftable}. Subtotals can be added by specifiying \code{addmargins=TRUE}. 
 
 \code{\link[gmodels]{CrossTable}} in the \code{gmodels} package also provides an easy method for producing percentage tables, but is restricted to two-way tables.

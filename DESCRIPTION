@@ -1,5 +1,5 @@
 Package: catspec
-Version: 0.96
+Version: 0.97
 Title: Special models for categorical variables
 Author: John Hendrickx <John_Hendrickx@yahoo.com>
 Maintainer: John Hendrickx <John_Hendrickx@yahoo.com>
@@ -11,7 +11,7 @@ Description: `ctab' creates (multiway) percentage tables. `sqtab'
         using mlogit or clogit
 Suggests: mlogit,survival
 License: GPL (>= 2)
-URL: http://home.wanadoo.nl/john.hendrickx/statres/
-Packaged: 2012-03-04 21:27:11 UTC; john
+Packaged: 2013-04-16 21:54:52 UTC; john
+NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2012-03-05 07:24:31
+Date/Publication: 2013-04-17 07:33:44

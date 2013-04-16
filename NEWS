@@ -1,3 +1,5 @@
+Version 0.97, 16APR2012
+- Removed \synopsis from ctab.Rd
 Version 0.96, 04MAR2012
 - Fixed bug in ctab, could not handle ordered factors
 - Removed dataset logan, use survival::logan instead
